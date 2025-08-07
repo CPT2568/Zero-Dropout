@@ -1,10 +1,391 @@
 <!DOCTYPE html>
-<html>
-   <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-      <base target="_top">
-   </head>
-   <body>
-      <iframe style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0;" src="https://script.google.com/a/macros/cpt.ac.th/s/AKfycbwZg4f4QWs_kT3msKpiBrRGNajG7vM0J8aXMQ1MFr_o9u0048mcP-YdZfC3xkD6GmSC/exec"></iframe>
-   </body>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero Dropout Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #2E7D32;
+            --soft-green: #81C784;
+            --light-green: #E8F5E9;
+            --text-color: #333;
+            --bg-gradient: linear-gradient(to bottom, #E8F5E9, #ffffff);
+            --card-bg: #ffffff;
+            --highlight: #FFB74D;
+            --title-color: #1976D2;
+        }
+        body {
+            font-family: 'Prompt', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .logo-container img {
+            width: 80px;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            animation: flipY 5s linear infinite;
+            transform-style: preserve-3d;
+        }
+        @keyframes flipY {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+        .header-text h2 {
+            margin: 0;
+            font-size: 1.5em;
+            color: white;
+        }
+        .header-text h3 {
+            margin: 5px 0 0;
+            font-size: 1em;
+            font-weight: 300;
+            color: white;
+        }
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: var(--card-bg);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .form-section, .table-section {
+            padding: 20px;
+            border-radius: 12px;
+            background: #f9f9f9;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+        }
+        h3 {
+            color: var(--title-color);
+            border-bottom: 3px solid var(--highlight);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        select, input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 5px rgba(46, 125, 50, 0.5);
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            font-weight: 600;
+        }
+        button:hover {
+            background: linear-gradient(to right, #43A047, #1B5E20);
+            transform: translateY(-2px);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: var(--soft-green);
+            color: #333;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        footer {
+            margin-top: 30px;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            font-size: 0.9em;
+            text-align: center;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        .dashboard-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .swal2-container {
+            font-family: 'Prompt', sans-serif !important;
+        }
+        .swal2-popup {
+            border-radius: 15px !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
+        }
+        .swal2-title {
+            color: var(--title-color) !important;
+        }
+        .swal2-confirm.swal2-styled {
+            background-color: var(--primary-green) !important;
+            border: none !important;
+            box-shadow: none !important;
+            transition: background-color 0.3s, transform 0.2s !important;
+        }
+        .swal2-confirm.swal2-styled:focus {
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.5) !important;
+        }
+        .swal2-confirm.swal2-styled:hover {
+            background-color: #43A047 !important;
+        }
+        @media (max-width: 767px) {
+            header h2 {
+                font-size: 1.2em;
+            }
+            header h3 {
+                font-size: 0.9em;
+            }
+            main {
+                padding: 10px;
+            }
+            h3 {
+                font-size: 1.3em;
+            }
+            button {
+                font-size: 1em;
+            }
+            th, td {
+                padding: 8px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="https://img5.pic.in.th/file/secure-sv1/LOGOCPT.png" alt="logo">
+            <div class="header-text">
+                <h2>โรงเรียนชลประทานผาแตก (ปัญญาพลอุปถัมภ์)</h2>
+                <h3>📘 ระบบติดตามกิจกรรม Zero Dropout</h3>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="form-section">
+            <h3>บันทึกกิจกรรม</h3>
+            <label for="date">📅 วันที่ทำกิจกรรม:</label>
+            <input type="date" id="date" required>
+            <label for="activity">ชื่อกิจกรรม:</label>
+            <select id="activity">
+                <option value="">-- เลือกกิจกรรม --</option>
+                <option>ติดตามผลการมาเรียนรายวัน</option>
+                <option>เยี่ยมบ้านนักเรียน</option>
+                <option>ประชุมผู้ปกครองนักเรียน</option>
+                <option>ประชุมผู้ปกครองคณะกรรมการสถานศึกษา</option>
+                <option>แนะแนวอาชีพ</option>
+                <option>เรียนซ่อมเสริมเฉพาะราย</option>
+                <option>อบรมทักษะอาชีพ</option>
+                <option>กิจกรรมจิตอาสา</option>
+                <option>ค่ายเรียนรู้ผ่านชุมชน</option>
+                <option>กิจกรรม Open House</option>
+                <option>กิจกรรมอบรมความรู้ในโรงเรียน</option>
+                <option>กิจกรรมอบรมความรู้วิทยากรภายนอก</option>
+                <option>ส่งต่อเรียนออนไลน์</option>
+            </select>
+            <label for="owner">ผู้รับผิดชอบ:</label>
+            <select id="owner">
+                <option value="">-- เลือกผู้รับผิดชอบ --</option>
+                <option>นางสาวณฐอร อินต่อม - ผู้อำนวยการชำนาญการพิเศษ</option>
+                <option>นางวราภัสร์ ใฝคำ - รองผู้อำนวยการชำนาญการพิเศษ</option>
+                <option>นางรัตนา ประชากุล - ครูผู้ทรงคุณค่า</option>
+                <option>นางแพรวพรรณ จันทะแจ้ง - ครูชำนาญการพิเศษ</option>
+                <option>นางสะไบทิพย์ ยาโน - ครูชำนาญการพิเศษ</option>
+                <option>นางเกศรินทร์ ลอรักษา - ครูชำนาญการพิเศษ</option>
+                <option>นางแสงบุญ เชิญธงไชย - ครูชำนาญการพิเศษ</option>
+                <option>นายณัฐภัทร หลวงจันทร์ - ครูชำนาญการ</option>
+                <option>นางสาวอนงนาฏ ใบแสง - ครูชำนาญการพิเศษ</option>
+                <option>นางยุพิน เสนีวงค์ ณ อยุธยา - ครูชำนาญการพิเศษ</option>
+                <option>นางสาวเพ็ญนภา สล่าปัน - ครูชำนาญการพิเศษ</option>
+                <option>นางสาวพัชรี สายพาด - ครูชำนาญการพิเศษ</option>
+                <option>นายณรงค์ฤทธิ์ ขุนแก้วพะเนา - ครูชำนาญการพิเศษ</option>
+                <option>นางสาวภัทรภร วงศ์แก้ว - ครูชำนาญการพิเศษ</option>
+                <option>ว่าที่ร.ต.กรฤทธิ์ บุญญานุกูล - ครูชำนาญการ</option>
+                <option>นางสาวลัดดาวัลย์ ฟองวรรณา - ครูชำนาญการพิเศษ</option>
+                <option>นางสาวณชกนก ภัทรวรคุณากร - ครูชำนาญการพิเศษ</option>
+                <option>นางพัชรา ภิระกันทา - ครูชำนาญการพิเศษ</option>
+                <option>นางณัฐธิดา ทองทา - ครูชำนาญการพิเศษ</option>
+                <option>นางสาวพิมลณัฐ มาจุม - ครูผู้ช่วย</option>
+                <option>นางสาวเสาวลักษณ์ ไชยมูล - ครูชำนาญการ</option>
+                <option>นางสาวสุธาทิพย์ กันฤทธิ์ - ครูชำนาญการ</option>
+                <option>นางสาวนภาลัย อินทจักร์ - ครูชำนาญการ</option>
+                <option>นางพรรณิกา ใจภักดี - ครูชำนาญการ</option>
+                <option>นายสรวรรณ หลักฐาน - ครู</option>
+                <option>นางสาวภัทรพร สุริณา - ครูผู้ช่วย</option>
+                <option>นางสุมณฑา ทองเจือ - พนักงานราชการ</option>
+                <option>นางวารี จำนงค์ - เจ้าหน้าที่ธุรการ</option>
+                <option>นายนนทวัฒน์ สาแก้ว - นักศึกษาฝึกประสบการณ์</option>
+                <option>นายรัชชานนท์ เครือพุก - นักศึกษาฝึกประสบการณ์</option>
+                <option>นายอนุวัฒน์ บุญเรือง - นักศึกษาฝึกประสบการณ์</option>
+                <option>นายเทิดศักดิ์ เจริญเจ้าสกุล - นักศึกษาฝึกประสบการณ์</option>
+                <option>นายอติชาต วงศ์ทอง - นักศึกษาฝึกประสบการณ์</option>
+            </select>
+            <label for="note">หมายเหตุ:</label>
+            <textarea id="note" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
+            <button onclick="submitLog()">💾 บันทึกข้อมูล</button>
+        </div>
+        <div class="table-section">
+            <h3 style="margin-top:0;">📄 ตารางกิจกรรมที่ผ่านมา</h3>
+            <div style="overflow-x:auto;">
+                <table id="logTable">
+                    <thead>
+                        <tr>
+                            <th>บันทึกเมื่อ</th>
+                            <th>วันที่กิจกรรม</th>
+                            <th>กิจกรรม</th>
+                            <th>ผู้รับผิดชอบ</th>
+                            <th>หมายเหตุ</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>Copyright © 2025 โรงเรียนชลประทานผาแตก (ปัญญาพลอุปถัมภ์)</p>
+        <p>ทีมพัฒนาระบบ : นางสาวอนงนาฏ ใบแสง · นางสาวภัทรภร วงศ์แก้ว · นางเกศรินทร์ ลอรักษา · นายณรงค์ฤทธิ์ ขุนแก้วพะเนา</p>
+        <p>ที่ปรึกษาโครงการ : นางสาวณฐอร อินต่อม ผู้อำนวยการชำนาญการพิเศษ โรงเรียนชลประทานผาแตก</p>
+        <p>ผู้ช่วยที่ปรึกษาโครงการ : นางวราภัสร์ ใฝคำ - รองผู้อำนวยการชำนาญการพิเศษ โรงเรียนชลประทานผาแตก</p>
+    </footer>
+    <script>
+        function submitLog() {
+            const data = {
+                date: document.getElementById("date").value,
+                activity: document.getElementById("activity").value,
+                owner: document.getElementById("owner").value,
+                note: document.getElementById("note").value
+            };
+            if (!data.date || !data.activity || !data.owner) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'คำเตือน',
+                    text: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+                    confirmButtonText: 'ตกลง'
+                });
+                return;
+            }
+            Swal.fire({
+                title: 'กำลังบันทึก...',
+                text: 'กรุณารอสักครู่',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            google.script.run
+                .withSuccessHandler(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'บันทึกสำเร็จ!',
+                        text: 'บันทึกข้อมูลกิจกรรมเรียบร้อยแล้ว',
+                        confirmButtonText: 'ตกลง'
+                    });
+                    document.getElementById("date").value = "";
+                    document.getElementById("activity").value = "";
+                    document.getElementById("owner").value = "";
+                    document.getElementById("note").value = "";
+                    loadLogs();
+                })
+                .withFailureHandler(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด!',
+                        text: 'ไม่สามารถบันทึกข้อมูลได้: ' + error.message,
+                        confirmButtonText: 'ตกลง'
+                    });
+                })
+                .saveLog(data);
+        }
+
+        function loadLogs() {
+            google.script.run.withSuccessHandler(renderLogs).getLogs();
+        }
+
+        function renderLogs(jsonData) {
+            const data = JSON.parse(jsonData); 
+            const table = document.querySelector("#logTable tbody");
+            table.innerHTML = "";
+            
+            if (!data || data.length === 0) {
+              return;
+            }
+            
+            data.sort((a, b) => new Date(b[0]) - new Date(a[0]));
+            data.forEach(row => {
+                const [timestamp, activityDate, activity, owner, note] = row;
+                const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+                const timeOptions = { hour: '2-digit', minute: '2-digit' };
+                const formattedTimestamp = new Date(timestamp).toLocaleDateString('th-TH', dateOptions) + ' ' + new Date(timestamp).toLocaleTimeString('th-TH', timeOptions);
+                table.innerHTML += `
+                    <tr>
+                        <td>${formattedTimestamp}</td>
+                        <td>${new Date(activityDate).toLocaleDateString('th-TH', dateOptions)}</td>
+                        <td>${activity}</td>
+                        <td>${owner}</td>
+                        <td>${note}</td>
+                    </tr>
+                `;
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            loadLogs();
+        });
+    </script>
+</body>
 </html>
